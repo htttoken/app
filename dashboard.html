@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTT Dashboard</title>
+  <link rel="icon" type="image/png" href="assets/htt-logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+
+<body class="bg-white text-gray-800 font-sans">
+  <!-- Global Navigation -->
+<header class="bg-indigo-700 text-white p-4 shadow-md">
+  <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between">
+    <div class="flex items-center space-x-3 mb-2 sm:mb-0">
+      <img src="htt-logo.png" alt="HTT Logo" class="w-10 h-10 rounded-full" />
+      <h1 class="text-xl font-bold">HTT dApp</h1>
+    </div>
+    <nav class="space-x-4 text-sm text-center">
+      <a href="index.html" class="hover:underline">Home</a>
+      <a href="security.html" class="hover:underline">Security</a>
+      <a href="settings.html" class="hover:underline">Settings</a>
+    </nav>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <main class="max-w-3xl mx-auto mt-10 p-6 bg-gray-50 rounded-lg shadow-md">
+    <h2 class="text-2xl font-semibold mb-4">👤 Wallet Information</h2>
+    <p><strong>Address:</strong> <span id="walletAddress">Loading...</span></p>
+    <p><strong>Network:</strong> <span id="networkName">Loading...</span></p>
+
+    <div class="mt-6">
+      <h2 class="text-xl font-semibold mb-2">💰 Your HTT Balance</h2>
+      <p id="httBalance" class="text-3xl text-green-600 font-bold">0 HTT</p>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <a href="redeem.html" class="bg-yellow-400 hover:bg-yellow-500 text-white py-3 rounded-lg text-center font-semibold">🎁 Redeem</a>
+      <a href="swap.html" class="bg-blue-500 hover:bg-blue-600 text-white py-3 rounded-lg text-center font-semibold">🔄 Swap</a>
+      <a href="activity.html" class="bg-purple-500 hover:bg-purple-600 text-white py-3 rounded-lg text-center font-semibold">📜 History</a>
+    </div>
+  </main>
+
+  <!-- Script -->
+  <script>
+    const HTT_TOKEN_ADDRESS = "YOUR_HTT_TOKEN_CONTRACT"; // Replace with real contract address
+    const HTT_ABI = [ /* Minimal ABI for balanceOf */ 
+      "function balanceOf(address) view returns (uint256)"
+    ];
+
+    async function loadDashboard() {
+      if (window.ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        await provider.send("eth_requestAccounts", []);
+        const signer = provider.getSigner();
+        const address = await signer.getAddress();
+        const network = await provider.getNetwork();
+
+        document.getElementById("walletAddress").innerText = `${address.slice(0, 6)}...${address.slice(-4)}`;
+        document.getElementById("networkName").innerText = network.name;
+
+        // Load HTT token balance
+        const token = new ethers.Contract(HTT_TOKEN_ADDRESS, HTT_ABI, provider);
+        const balance = await token.balanceOf(address);
+        const formatted = ethers.utils.formatUnits(balance, 18);
+        document.getElementById("httBalance").innerText = `${formatted} HTT`;
+      } else {
+        alert("MetaMask not found.");
+      }
+    }
+
+    window.onload = loadDashboard;
+  </script>
+</body>
+</html>

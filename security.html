@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security Settings</title>
+  <link rel="icon" type="image/png" href="assets/htt-logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <!-- Global Navigation -->
+<header class="bg-indigo-700 text-white p-4 shadow-md">
+  <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between">
+    <div class="flex items-center space-x-3 mb-2 sm:mb-0">
+      <img src="htt-logo.png" alt="HTT Logo" class="w-10 h-10 rounded-full" />
+      <h1 class="text-xl font-bold">HTT dApp</h1>
+    </div>
+    <nav class="space-x-4 text-sm text-center">
+      <a href="index.html" class="hover:underline">Home</a>
+      <a href="security.html" class="hover:underline">Security</a>
+      <a href="settings.html" class="hover:underline">Settings</a>
+    </nav>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <main class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-semibold mb-6">🔐 Manage Your Security</h2>
+
+    <!-- Section: 2FA -->
+    <div class="mb-8">
+      <h3 class="text-xl font-bold mb-2">2-Factor Authentication</h3>
+      <label class="flex items-center space-x-3">
+        <input type="checkbox" id="toggle2FA" class="w-5 h-5" />
+        <span>Enable 2FA (email confirmation or Google Authenticator)</span>
+      </label>
+    </div>
+
+    <!-- Section: Withdrawal Limit -->
+    <div class="mb-8">
+      <h3 class="text-xl font-bold mb-2">Set Withdrawal Limit</h3>
+      <input type="number" id="withdrawalLimit" placeholder="Max HTT per day" class="w-full p-2 border rounded-lg" />
+    </div>
+
+    <!-- Section: KYC Upload -->
+    <div class="mb-8">
+      <h3 class="text-xl font-bold mb-2">KYC Verification</h3>
+      <p class="text-sm text-gray-600 mb-2">Upload passport, national ID, or business license.</p>
+      <input type="file" id="kycFile" class="w-full p-2 border rounded-lg" />
+    </div>
+
+    <button onclick="saveSecuritySettings()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold">
+      💾 Save Security Settings
+    </button>
+
+    <p id="statusMessage" class="text-center text-green-600 font-medium mt-4 hidden">Settings saved!</p>
+  </main>
+
+  <!-- Script: Simulate security saving -->
+  <script>
+    function saveSecuritySettings() {
+      const is2FA = document.getElementById("toggle2FA").checked;
+      const withdrawalLimit = document.getElementById("withdrawalLimit").value;
+      const kycFile = document.getElementById("kycFile").files[0];
+
+      // Simulate saving (could POST to backend in future)
+      console.log("2FA Enabled:", is2FA);
+      console.log("Withdrawal Limit:", withdrawalLimit);
+      console.log("KYC File:", kycFile ? kycFile.name : "No file uploaded");
+
+      document.getElementById("statusMessage").classList.remove("hidden");
+      setTimeout(() => {
+        document.getElementById("statusMessage").classList.add("hidden");
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

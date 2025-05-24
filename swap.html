@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Swap HTT</title>
+  <link rel="icon" type="image/png" href="assets/htt-logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Uniswap SDK Widget -->
+  <script src="https://unpkg.com/@uniswap/widgets@latest"></script>
+  <link href="https://unpkg.com/@uniswap/widgets@latest/fonts.css" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <!-- Global Navigation -->
+<header class="bg-indigo-700 text-white p-4 shadow-md">
+  <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between">
+    <div class="flex items-center space-x-3 mb-2 sm:mb-0">
+      <img src="htt-logo.png" alt="HTT Logo" class="w-10 h-10 rounded-full" />
+      <h1 class="text-xl font-bold">HTT dApp</h1>
+    </div>
+    <nav class="space-x-4 text-sm text-center">
+      <a href="index.html" class="hover:underline">Home</a>
+      <a href="security.html" class="hover:underline">Security</a>
+      <a href="settings.html" class="hover:underline">Settings</a>
+    </nav>
+  </div>
+</header>
+
+
+  <!-- Swap Widget -->
+  <main class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-semibold mb-6">🔄 Swap HTT ↔ USDT</h2>
+
+    <div id="swapWidget" class="rounded-lg overflow-hidden"></div>
+  </main>
+
+  <!-- Configure the Uniswap Widget -->
+  <script>
+    const HTT_TOKEN_ADDRESS = "0xYourHTTTokenAddressHere"; // Replace with your actual token address
+    const USDT_ADDRESS = "0xdAC17F958D2ee523a2206206994597C13D831ec7"; // USDT on Ethereum Mainnet
+
+    const provider = window.ethereum;
+
+    if (provider) {
+      const uniswapWidget = Uniswap.init({
+        theme: "light",
+        tokenList: [
+          {
+            address: HTT_TOKEN_ADDRESS,
+            symbol: "HTT",
+            name: "Hotel Travel Token",
+            decimals: 18,
+            chainId: 1, // 1 = Ethereum Mainnet
+            logoURI: "assets/htt-logo.png"
+          },
+          {
+            address: USDT_ADDRESS,
+            symbol: "USDT",
+            name: "Tether USD",
+            decimals: 6,
+            chainId: 1
+          }
+        ],
+        defaultInputTokenAddress: HTT_TOKEN_ADDRESS,
+        defaultOutputTokenAddress: USDT_ADDRESS,
+        container: "#swapWidget"
+      });
+    } else {
+      alert("MetaMask not found. Please install MetaMask to use this swap feature.");
+    }
+  </script>
+</body>
+</html>

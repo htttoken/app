@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTT Activity</title>
+  <link rel="icon" type="image/png" href="assets/htt-logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <!-- Global Navigation -->
+<header class="bg-indigo-700 text-white p-4 shadow-md">
+  <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between">
+    <div class="flex items-center space-x-3 mb-2 sm:mb-0">
+      <img src="htt-logo.png" alt="HTT Logo" class="w-10 h-10 rounded-full" />
+      <h1 class="text-xl font-bold">HTT dApp</h1>
+    </div>
+    <nav class="space-x-4 text-sm text-center">
+      <a href="index.html" class="hover:underline">Home</a>
+      <a href="security.html" class="hover:underline">Security</a>
+      <a href="settings.html" class="hover:underline">Settings</a>
+    </nav>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <main class="max-w-5xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-semibold mb-6">📜 Activity History</h2>
+    <p class="mb-4 text-sm text-gray-600">Wallet: <span id="walletAddress">Loading...</span></p>
+
+    <table class="w-full table-auto border-collapse">
+      <thead>
+        <tr class="bg-gray-200 text-left text-sm">
+          <th class="p-2">Date</th>
+          <th class="p-2">Action</th>
+          <th class="p-2">Amount</th>
+          <th class="p-2">Tx Hash</th>
+        </tr>
+      </thead>
+      <tbody id="activityTable">
+        <tr><td colspan="4" class="text-center py-4 text-gray-500">Loading activity...</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+  <!-- Script: Load and show activity -->
+  <script>
+    const HTT_TOKEN_ADDRESS = "0xYourHTTTokenAddress"; // Replace with your token contract
+    const HTT_ABI = [
+      "event Transfer(address indexed from, address indexed to, uint256 value)"
+    ];
+
+    async function loadActivity() {
+      if (!window.ethereum) return alert("MetaMask not found");
+
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      await provider.send("eth_requestAccounts", []);
+      const signer = provider.getSigner();
+      const userAddress = await signer.getAddress();
+      document.getElementById("walletAddress").innerText = userAddress.slice(0, 6) + "..." + userAddress.slice(-4);
+
+      const contract = new ethers.Contract(HTT_TOKEN_ADDRESS, HTT_ABI, provider);
+
+      const currentBlock = await provider.getBlockNumber();
+      const startBlock = currentBlock - 5000; // adjust as needed
+
+      const logs = await contract.queryFilter("Transfer", startBlock, currentBlock);
+
+      const rows = logs
+        .filter(log => log.args.from === userAddress || log.args.to === userAddress)
+        .map(log => {
+          const isSent = log.args.from === userAddress;
+          const action = isSent ? "Sent" : "Received";
+          const amount = ethers.utils.formatUnits(log.args.value, 18);
+          const date = new Date().toLocaleDateString();
+          const tx = log.transactionHash;
+          return `
+            <tr class="border-b text-sm">
+              <td class="p-2">${date}</td>
+              <td class="p-2">${action}</td>
+              <td class="p-2 ${isSent ? 'text-red-600' : 'text-green-600'}">${isSent ? '-' : '+'}${amount} HTT</td>
+              <td class="p-2"><a href="https://etherscan.io/tx/${tx}" target="_blank" class="text-blue-600 underline">View</a></td>
+            </tr>
+          `;
+        });
+
+      document.getElementById("activityTable").innerHTML = rows.length ? rows.join('') : `
+        <tr><td colspan="4" class="text-center py-4 text-gray-500">No recent activity found.</td></tr>
+      `;
+    }
+
+    window.onload = loadActivity;
+  </script>
+</body>
+</html>

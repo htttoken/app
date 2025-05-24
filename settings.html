@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Settings</title>
+  <link rel="icon" type="image/png" href="assets/htt-logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 text-gray-800 font-sans">
+  <!-- Global Navigation -->
+<header class="bg-indigo-700 text-white p-4 shadow-md">
+  <div class="max-w-6xl mx-auto flex flex-wrap items-center justify-between">
+    <div class="flex items-center space-x-3 mb-2 sm:mb-0">
+      <img src="htt-logo.png" alt="HTT Logo" class="w-10 h-10 rounded-full" />
+      <h1 class="text-xl font-bold">HTT dApp</h1>
+    </div>
+    <nav class="space-x-4 text-sm text-center">
+      <a href="index.html" class="hover:underline">Home</a>
+      <a href="security.html" class="hover:underline">Security</a>
+      <a href="settings.html" class="hover:underline">Settings</a>
+    </nav>
+  </div>
+</header>
+
+
+  <!-- Main Content -->
+  <main class="max-w-3xl mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
+    <h2 class="text-2xl font-semibold mb-6">⚙️ Customize Your Profile</h2>
+
+    <!-- Nickname -->
+    <div class="mb-6">
+      <label class="block font-semibold mb-1" for="nickname">Display Name</label>
+      <input type="text" id="nickname" placeholder="Enter your nickname" class="w-full p-2 border rounded-lg" />
+    </div>
+
+    <!-- Profile Picture -->
+    <div class="mb-6">
+      <label class="block font-semibold mb-1">Profile Picture</label>
+      <input type="file" id="profilePic" accept="image/*" class="w-full p-2 border rounded-lg" />
+    </div>
+
+    <!-- Email Address -->
+    <div class="mb-6">
+      <label class="block font-semibold mb-1" for="email">Email (Optional)</label>
+      <input type="email" id="email" placeholder="you@example.com" class="w-full p-2 border rounded-lg" />
+    </div>
+
+    <!-- Theme Switch -->
+    <div class="mb-6">
+      <label class="block font-semibold mb-1">Theme</label>
+      <select id="themeSelect" class="w-full p-2 border rounded-lg">
+        <option value="light">🌞 Light</option>
+        <option value="dark">🌙 Dark</option>
+      </select>
+    </div>
+
+    <!-- Save Button -->
+    <button onclick="saveSettings()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-lg font-semibold">
+      💾 Save Settings
+    </button>
+
+    <!-- Disconnect -->
+    <div class="mt-6 text-center">
+      <button onclick="disconnectWallet()" class="text-red-600 underline font-semibold">🔌 Disconnect Wallet</button>
+    </div>
+
+    <p id="statusMessage" class="text-center text-green-600 font-medium mt-4 hidden">✅ Settings saved!</p>
+  </main>
+
+  <!-- Script -->
+  <script>
+    function saveSettings() {
+      const nickname = document.getElementById("nickname").value;
+      const email = document.getElementById("email").value;
+      const theme = document.getElementById("themeSelect").value;
+      const profilePic = document.getElementById("profilePic").files[0];
+
+      console.log("Saved Nickname:", nickname);
+      console.log("Saved Email:", email);
+      console.log("Theme:", theme);
+      console.log("Profile Pic:", profilePic ? profilePic.name : "None");
+
+      // Simulated save status
+      document.getElementById("statusMessage").classList.remove("hidden");
+      setTimeout(() => {
+        document.getElementById("statusMessage").classList.add("hidden");
+      }, 3000);
+    }
+
+    function disconnectWallet() {
+      // In real dApps, this just resets front-end state
+      alert("Wallet disconnected (frontend reset). Reloading...");
+      localStorage.clear();
+      location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
